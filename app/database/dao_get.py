@@ -9,6 +9,7 @@ def select_from_database(user, password, host, database):
             result = result_proxy.fetchall()
             print (result)
             return result
+            session.close()
         except Exception as e:
             print (e)
             return False

@@ -1,7 +1,8 @@
 
 # Created by https://www.gitignore.io/api/python,terraform
 # Edit at https://www.gitignore.io/?templates=python,terraform
-
+*app/config.py
+*config.py
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
