@@ -1,19 +1,42 @@
-#Load Balancer Variables
-variable "elb_name" {
-  default = ""
+variable "sg_name" {
+  default = "my-elb-sg"
 }
 
-variable "ssl_arn" {
-  default = ""
+variable "ips_sg_list" {
+  default = ["10.5.0.0/16", "0.0.0.0/0"]
 }
+
+variable "ips_sg_list_lc" {
+  default = ["10.5.0.0/16"]
+}
+
+variable "listener_port" {
+  default = 80
+}
+
+variable "listener_protocol" {
+  default = "HTTP"
+}
+
+variable "target_group_port" {
+  default     = 8888
+  description = "Port of my applicaiton to receive traffic"
+}
+
+variable "target_group_health_path" {
+  default = "api/health/"
+}
+
+variable "elb_name" {
+  default = "tdc-lab-lb"
+}
+
+# variable "ssl_arn" {
+#   default = ""
+# }
 
 variable "application_port" {
-  default = ""
-}
-
-variable "security_groups" {
-  default = [""]
-  type    = "list"
+  default = 8888
 }
 
 variable "internal" {
@@ -22,51 +45,88 @@ variable "internal" {
 
 #Lauch Configuration
 variable "lc_name" {
-  default = "value"
+  default = "lc-tdc-applciation-lab-"
 }
 
 variable "ami_id" {
-  default = "value"
+  default = "ami-0c10a33401c2a495d"
 }
 
 variable "instance_type" {
-  default = "value"
-}
-
-variable "asg_security_groups" {
-  default = [""]
-  type    = "list"
+  default = "t2.micro"
 }
 
 variable "iam_role" {
-  default = ""
+  default = "arn:aws:iam::618118007154:instance-profile/aws-full-access"
 }
 
 variable "key_name" {
-  default = ""
+  default = "tdclabkey"
 }
 
 #Auto Scaling Variables
 variable "asg_name" {
-  default = "value"
+  default = "asg-tdc-lab"
 }
 
 variable "max_size" {
-  default = "value"
+  default = 5
 }
 
 variable "min_size" {
-  default = "value"
+  default = 3
 }
 
 variable "desired_capacity" {
-  default = "value"
+  default = 3
 }
 
 variable "tag_name" {
-  default = "value"
+  default = "asg-tdc-lab"
 }
 
 variable "tag_team" {
-  default = "value"
+  default = "Duate"
 }
+
+#Database Variables
+
+variable "identifier" {
+  default = "tdc-lab-test"
+}
+
+variable "allocated_storage" {
+  default = 20
+}
+
+variable "engine" {
+  default = "mysql"
+}
+
+variable "engine_version" {
+  default = "5.7"
+}
+
+variable "instance_class" {
+  default = "db.t2.micro"
+}
+
+variable "db_availability_zone" {
+  default = "us-east-2a"
+}
+
+variable "db_tag_name" {
+  default = "tdclabdb"
+}
+
+variable "db_subnet_group_name" {
+  default = "private_subnet_group"
+}
+
+variable "database_name" {
+  default = "dbtest"
+}
+
+variable "db_username" {}
+
+variable "db_password" {}

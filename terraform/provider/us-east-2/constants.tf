@@ -11,3 +11,8 @@ output "private_subnets" {
 }
 
 
+#Pegar VPC ID com Data
+output "vpc_id" {
+  value = "vpc-0cb37b128f9c9e3c4"
+}
+

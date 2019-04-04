@@ -1,13 +1,13 @@
 output "arn" {
-  value = "${aws_db_instance.aws_rds.arn}"
+  value = "${element(concat(aws_db_instance.aws_rds.*.arn, list("")), 0)}"
 }
 
 output "id" {
-  value = "${aws_db_instance.aws_rds.id}"
+  value = "${element(concat(aws_db_instance.aws_rds.*.id, list("")), 0)}"
 }
 
 output "endpoint" {
-  value = "${aws_db_instance.aws_rds.endpoint}"
+  value = "${element(concat(aws_db_instance.aws_rds.*.endpoint, list("")), 0)}"
 }
 
 output "parameter_id" {

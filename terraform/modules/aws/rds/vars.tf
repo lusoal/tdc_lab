@@ -2,6 +2,9 @@ variable "from_snapshot" {
   description = "Create an instance from a database snapshot"  
 }
 
+variable "identifier" {}
+
+
 variable "allocated_storage" {}
 
 variable "storage_type" {
@@ -24,9 +27,13 @@ variable "publicly_accessible" {
   default = false
 }
 
-variable "username" {}
+variable "username" {
+  default = "default_user"
+}
 
-variable "password" {}
+variable "password" {
+  default = "default_pass"
+}
 
 variable "parameter_group_name" {
   default = "default.mysql5.7"
@@ -53,14 +60,6 @@ variable "backup_retention_period" {
 }
 
 variable "tag_name" {}
-
-variable "team_name" {}
-
-variable "application" {}
-
-variable "workload_type" {
-  default = "production"
-}
 
 variable "snapshot_identifier" {
   description = "The snapshot identifier of the Database instance"
