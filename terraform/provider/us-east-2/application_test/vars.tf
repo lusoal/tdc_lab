@@ -48,9 +48,9 @@ variable "lc_name" {
   default = "lc-tdc-applciation-lab-"
 }
 
-variable "ami_id" {
-  default = "ami-0c10a33401c2a495d"
-}
+# variable "ami_id" {
+#   default = "ami-0c10a33401c2a495d"
+# }
 
 variable "instance_type" {
   default = "t2.micro"
@@ -92,7 +92,7 @@ variable "tag_team" {
 #Database Variables
 
 variable "identifier" {
-  default = "tdc-lab-test"
+  default = "tdc-ab"
 }
 
 variable "allocated_storage" {
@@ -104,7 +104,7 @@ variable "engine" {
 }
 
 variable "engine_version" {
-  default = "5.7"
+  default = "5.6"
 }
 
 variable "instance_class" {
@@ -123,10 +123,26 @@ variable "db_subnet_group_name" {
   default = "private_subnet_group"
 }
 
+variable "vpc_security_group_ids" {
+  default = ["sg-07bdffc34e7525450"]
+}
+
 variable "database_name" {
-  default = "dbtest"
+  default = "jazz"
 }
 
 variable "db_username" {}
 
 variable "db_password" {}
+
+variable "application_ami_name" {
+  default = "MyApplication"
+}
+
+variable "zone_fqdn" {
+  default = "dev.tdc_lab.internal."
+}
+
+variable "cname_dns_name" {
+  default = "teste"
+}

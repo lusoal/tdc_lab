@@ -64,3 +64,11 @@ variable "tag_name" {}
 variable "snapshot_identifier" {
   description = "The snapshot identifier of the Database instance"
 }
+
+variable "skip_final_snapshot" {
+  default = true
+}
+
+variable "vpc_security_group_ids" {
+  type = "list"
+}

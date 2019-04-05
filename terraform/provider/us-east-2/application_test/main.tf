@@ -83,11 +83,10 @@ module "sg_rules_app_lc" {
   security_group_id = "${module.aws_security_group_lc.id}"
 }
 
-#create Securitiy Group for application LC
 module aws_launch_configuration {
   source          = "../../../modules/aws/launch_config"
   lc_name         = "${var.lc_name}"
-  ami_id          = "${var.ami_id}"
+  ami_id          = "${data.aws_ami.latest_application.id}"
   instance_type   = "${var.instance_type}"
   path_user_data  = "./user_data.sh"
   security_groups = "${module.aws_security_group_lc.id}"
@@ -113,25 +112,35 @@ module auto_scaling_group {
 }
 
 module rds_database {
-  source            = "../../../modules/aws/rds"
-  from_snapshot     = true
-  name              = "${var.database_name}"
-  identifier        = "${var.identifier}"
-  allocated_storage = "${var.allocated_storage}"
-  engine            = "${var.engine}"
-  engine_version    = "${var.engine_version}"
-  instance_class    = "${var.instance_class}"
-  username          = "${var.db_username}"
-  password          = "${var.db_password}"
-  availability_zone = "${var.db_availability_zone}"
+  source                 = "../../../modules/aws/rds"
+  from_snapshot          = "SNAP"
+  name                   = "${var.database_name}"
+  identifier             = "${var.identifier}"
+  allocated_storage      = "${var.allocated_storage}"
+  engine                 = "${var.engine}"
+  engine_version         = "${var.engine_version}"
+  instance_class         = "${var.instance_class}"
+  username               = "${var.db_username}"
+  password               = "${var.db_password}"
+  availability_zone      = "${var.db_availability_zone}"
+  vpc_security_group_ids = "${var.vpc_security_group_ids}"
 
   #Create a Subnet Group
   db_subnet_group_name = "${var.db_subnet_group_name}"
   multi_az             = false
 
   #Get snapshot from data
-  snapshot_identifier = "snap-tdc-lab"
+  snapshot_identifier = "${data.aws_db_snapshot.latest_prod_snapshot.id}"
   tag_name            = "${var.db_tag_name}"
+}
+
+module rds_record {
+  source   = "../../../modules/aws/route53"
+  dns_kind = "CNAME"
+  zone     = "${var.zone_fqdn}"
+  name     = "${var.cname_dns_name}"
+  cname    = "${module.rds_database.endpoint}."
+  ttl      = 60
 }
 
 #Update DNS Record Set to the new ELB Endpoint
