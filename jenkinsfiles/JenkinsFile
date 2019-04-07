@@ -21,7 +21,7 @@ pipeline {
         }
         stage ('Apply Terraform to create DR Environment'){
             steps {
-                dir ("${REPO_NAME}/terraform/provider/aws/us-east-2/application_test") {
+                dir ("${REPO_NAME}/terraform/provider/us-east-2/application_test") {
                     script {
                         TF_COMMAND = sh (
                                             script: "which terraform",
@@ -37,12 +37,12 @@ pipeline {
                     }
 
                     script {
-                        RDS_ENDPOINT = sh (
+                        ELB_ENDPOINT = sh (
                             script: "${TF_COMMAND} output | head -1",
                             returnStdout: true   
                         ).trim()
 
-                        ELB_ENDPOINT = sh (
+                        RDS_ENDPOINT = sh (
                             script: "${TF_COMMAND} output | sort -r | head -1",
                             returnStdout: true   
                         ).trim()
