@@ -1,0 +1,85 @@
+//Jenkinsfile to create and setup all environment in OHIO
+
+pipeline {
+    agent any
+    parameters {
+        string(name: 'APPNAME', defaultValue: 'TDCLAB', description: 'The name of your application')
+    }
+    environment {
+        GIT_BRANCH = "master"
+        REPO = "https://github.com/lusoal/tdc_lab.git"
+        REPO_NAME = "tdc_lab"
+        DB_USER = ""
+        DB_PASS = ""
+    }
+
+    stages {
+        stage('Clone APP Repository') { 
+            steps {
+                    sh "git clone ${REPO} && cd ${REPO_NAME} && git checkout ${GIT_BRANCH}"
+            }
+        }
+        stage ('Apply Terraform to create DR Environment'){
+            steps {
+                dir ("${REPO_NAME}/terraform/provider/aws/us-east-2/application_test") {
+                    script {
+                        TF_COMMAND = sh (
+                                            script: "which terraform",
+                                            returnStdout: true
+                                        ).trim()
+                    }
+                    sh "${TF_COMMAND} init"
+
+                    terraform_execution("plan")
+
+                    retry(2){
+                        terraform_execution("apply")
+                    }
+
+                    script {
+                        RDS_ENDPOINT = sh (
+                            script: "${TF_COMMAND} output | head -1",
+                            returnStdout: true   
+                        ).trim()
+
+                        ELB_ENDPOINT = sh (
+                            script: "${TF_COMMAND} output | sort -r | head -1",
+                            returnStdout: true   
+                        ).trim()
+                    }
+                        
+                }
+            }
+        }
+        
+        stage ('Change Database DNS and App DNS'){
+            steps{
+                dir ("${REPO_NAME}/python_scripts/dns_change/") {
+                    sh 'ls -lah'
+                    //Realizar a alteracao do DNS da aplicacao e do banco de dados
+                }
+            }
+        }
+    }
+    post { 
+            success {
+                echo "Success"
+            }
+            failure {
+                echo "Failure"
+            }
+        }
+    }
+
+def terraform_execution(String COMMAND){
+    //Variaveis tem escopo Global nao precisam ser definidas.
+    if ("${COMMAND}" == "plan") {
+        sh "${TF_COMMAND} ${COMMAND} \
+           -var 'db_password='${DB_PASS} \
+           -var 'db_username='${DB_USER}"
+    } else {
+        sh "${TF_COMMAND} ${COMMAND} \
+           -var 'db_password='${DB_PASS} \
+           -var 'db_username='${DB_USER} --auto-approve"
+    }
+}

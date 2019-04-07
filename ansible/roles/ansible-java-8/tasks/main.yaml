@@ -1,0 +1,26 @@
+---
+- name: Install Java8
+  yum:  
+    name: "java-{{ java.version }}"
+    state: latest
+  tags:
+    - always
+
+- name: correct java version selected
+  alternatives:
+    name: java
+    path: "{{ java.alternatives_path }}"
+  tags:
+    - always
+
+- name: Check Java Version
+  shell: "java -version"
+  register: java_version
+  tags:
+    - always
+
+- name: Get Java Version
+  debug:
+    var: java_version
+  tags:
+    - always

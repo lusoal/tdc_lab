@@ -1,13 +1,25 @@
+# output "arn" {
+#   value = "${element(concat(aws_db_instance.aws_rds.*.arn, list("")), 0)}"
+# }
+
+# output "id" {
+#   value = "${element(concat(aws_db_instance.aws_rds.*.id, list("")), 0)}"
+# }
+
+# output "address" {
+#   value = "${element(concat(aws_db_instance.aws_rds.*.address, list("")), 0)}"
+# }
+
 output "arn" {
-  value = "${element(concat(aws_db_instance.aws_rds.*.arn, list("")), 0)}"
+  value = "${aws_db_instance.aws_rds_snapshot.arn}"
 }
 
 output "id" {
-  value = "${element(concat(aws_db_instance.aws_rds.*.id, list("")), 0)}"
+  value = "${aws_db_instance.aws_rds_snapshot.id}"
 }
 
-output "endpoint" {
-  value = "${element(concat(aws_db_instance.aws_rds.*.endpoint, list("")), 0)}"
+output "address" {
+  value = "${aws_db_instance.aws_rds_snapshot.address}"
 }
 
 output "parameter_id" {

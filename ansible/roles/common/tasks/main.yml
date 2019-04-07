@@ -1,0 +1,59 @@
+---
+- name: upgrade all packages
+  yum:
+    name: '*'
+    state: latest
+  tags:
+    - always
+
+- name: Install Docker 
+  yum:  
+    name: "{{ item }}"
+    state: present
+  loop:
+    - python-pip
+    - docker
+    - htop
+    - wget
+  tags:
+    - always
+
+- name: Install Ansible
+  pip:
+    name: ansible
+  tags:
+    - always
+
+- name: Install Terraform
+  get_url:
+    url: "{{ terraform.url }}"
+    dest: /tmp/
+  tags:
+  - always
+
+- name: Extract terraform.zip into 
+  unarchive:
+    src: "/tmp/{{ terraform.package_name }}"
+    dest: "{{ terraform.destination }}"
+    remote_src: yes
+  tags:
+  - always
+
+- name: Change Execution Permissions
+  file:
+    path: "{{ terraform.destination }}"
+    owner: root
+    group: root
+    mode: 0755
+  tags:
+  - always
+
+- name: Start service docker
+  service:
+    name: docker
+    enabled: yes
+    state: started
+  tags:
+  - always
+
+# tasks file for common

@@ -1,0 +1,10 @@
+---
+- include_tasks: amazon-linux.yml
+  tags:
+    - amazon
+
+- include_tasks: debian.yml
+  tags:
+    - debian
+
+# tasks file for jenkins

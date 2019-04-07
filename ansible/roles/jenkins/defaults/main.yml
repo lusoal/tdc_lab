@@ -1,0 +1,4 @@
+---
+jenkins:
+  repo: http://pkg.jenkins.io/redhat/jenkins.repo
+# defaults file for jenkins
