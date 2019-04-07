@@ -25,9 +25,9 @@ module "aws_security_group" {
   ips_sg_list = "${var.ips_sg_list}"
 }
 
-module "sg_rules_http" {
+module "sg_rules_https" {
   source            = "../../../modules/aws/security_group/create_sg_rule"
-  port              = 80
+  port              = 443
   protocol          = "TCP"
   ips_sg_list       = "${var.ips_sg_list}"
   security_group_id = "${module.aws_security_group.id}"
@@ -71,18 +71,10 @@ module "target_group" {
 module "aws_security_group_lc" {
   source      = "../../../modules/aws/security_group/create_sg"
   sg_name     = "${var.sg_name}-asg"
+  port        = "${var.target_group_port}"
   vpc_id      = "${module.environment.vpc_id}"
   ips_sg_list = "${var.ips_sg_list_lc}"
 }
-
-module "sg_rules_app_lc" {
-  source            = "../../../modules/aws/security_group/create_sg_rule"
-  port              = 8888
-  protocol          = "TCP"
-  ips_sg_list       = "${var.ips_sg_list_lc}"
-  security_group_id = "${module.aws_security_group_lc.id}"
-}
-
 module aws_launch_configuration {
   source          = "../../../modules/aws/launch_config"
   lc_name         = "${var.lc_name}"
@@ -133,16 +125,3 @@ module rds_database {
   snapshot_identifier = "${data.aws_db_snapshot.latest_prod_snapshot.id}"
   tag_name            = "${var.db_tag_name}"
 }
-
-module rds_record {
-  source   = "../../../modules/aws/route53"
-  dns_kind = "CNAME"
-  zone     = "${var.zone_fqdn}"
-  name     = "${var.cname_dns_name}"
-  cname    = "${module.rds_database.endpoint}."
-  ttl      = 60
-}
-
-#Update DNS Record Set to the new ELB Endpoint
-#Update DNS Record Set to the new RDS instance Endpoint
-

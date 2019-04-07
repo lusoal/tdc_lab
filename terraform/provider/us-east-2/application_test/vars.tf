@@ -4,6 +4,7 @@ variable "sg_name" {
 
 variable "ips_sg_list" {
   default = ["10.5.0.0/16", "0.0.0.0/0"]
+  description = "Sg para o balanceador"
 }
 
 variable "ips_sg_list_lc" {
@@ -47,10 +48,6 @@ variable "internal" {
 variable "lc_name" {
   default = "lc-tdc-applciation-lab-"
 }
-
-# variable "ami_id" {
-#   default = "ami-0c10a33401c2a495d"
-# }
 
 variable "instance_type" {
   default = "t2.micro"
@@ -137,12 +134,4 @@ variable "db_password" {}
 
 variable "application_ami_name" {
   default = "MyApplication"
-}
-
-variable "zone_fqdn" {
-  default = "dev.tdc_lab.internal."
-}
-
-variable "cname_dns_name" {
-  default = "teste"
 }
