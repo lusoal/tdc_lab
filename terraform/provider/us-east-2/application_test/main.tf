@@ -3,14 +3,14 @@ provider "aws" {
 }
 
 //Change Bucket name on Terraform
-# terraform {
-#   backend "s3" {
-#     region  = "sa-east-1"
-#     bucket  = "__BUCKET_NAME__"
-#     key     = "vpc_lab.tfstate"
-#     encrypt = true
-#   }
-# }
+terraform {
+  backend "s3" {
+    region  = "us-east-2"
+    bucket  = "tf-state-duarte"
+    key     = "application_dr_state.tfstate"
+    encrypt = true
+  }
+}
 
 module "environment" {
   source = "../"

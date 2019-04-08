@@ -11,6 +11,8 @@ pipeline {
         REPO_NAME = "tdc_lab"
         DB_USER = ""
         DB_PASS = ""
+        PUBLIC_HOSTED_ZONE = "Z21NECZDPTEFWT"
+        PRIVATE_HOSTED_ZONE = "Z2IV7SDXVVDB4M"
     }
 
     stages {
@@ -55,13 +57,17 @@ pipeline {
         stage ('Change Database DNS and App DNS'){
             steps{
                 dir ("${REPO_NAME}/python_scripts/dns_change/") {
-                    sh 'ls -lah'
+                    sh "python change_dns_record.py ${PRIVATE_HOSTED_ZONE} database.dev.tdc_lab.internal ${RDS_ENDPOINT} CNAME"
+                    sh "python change_dns_record.py ${PUBLIC_HOSTED_ZONE} app-tdc.lucasduarte.club ${ELB_ENDPOINT} CNAME"
                     //Realizar a alteracao do DNS da aplicacao e do banco de dados
                 }
             }
         }
     }
     post { 
+            always {
+                echo "Gonna Clean Environment"
+            }
             success {
                 echo "Success"
             }
